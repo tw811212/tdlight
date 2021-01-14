@@ -216,6 +216,9 @@ void MemoryManager::clean_memory(bool full, Promise<Unit> promise) const {
   td_->inline_queries_manager_->memory_cleanup();
   td_->poll_manager_->memory_cleanup();
 
+  // Eagerly free memory
+  mi_collect(true);
+
   promise.set_value(Unit());
 }
 

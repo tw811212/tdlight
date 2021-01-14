@@ -3914,6 +3914,10 @@ void Td::dec_actor_refcnt() {
       LOG(DEBUG) << "VoiceNotesManager was cleared" << timer;
       web_pages_manager_.reset();
       LOG(DEBUG) << "WebPagesManager was cleared" << timer;
+
+      // Eagerly free memory
+      mi_collect(true);
+
       Promise<> promise = PromiseCreator::lambda([actor_id = create_reference()](Unit) mutable { actor_id.reset(); });
 
       G()->set_shared_config(nullptr);
@@ -3929,6 +3933,9 @@ void Td::dec_actor_refcnt() {
     } else {
       UNREACHABLE();
     }
+  } else {
+    // Eagerly free memory
+    mi_collect(true);
   }
 }
 

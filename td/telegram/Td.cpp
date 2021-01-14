@@ -135,8 +135,6 @@
 #include "td/utils/tl_parsers.h"
 #include "td/utils/utf8.h"
 
-#include "mimalloc/include/mimalloc-new-delete.h"
-
 #include <cmath>
 #include <limits>
 #include <tuple>

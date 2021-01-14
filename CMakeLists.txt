@@ -704,7 +704,7 @@ endif()
 add_library(tdcore STATIC ${TDLIB_SOURCE})
 target_include_directories(tdcore PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${TL_TD_AUTO_INCLUDE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/mimalloc>)
 target_include_directories(tdcore SYSTEM PRIVATE ${OPENSSL_INCLUDE_DIR})
-target_link_libraries(tdcore PUBLIC tdapi tdactor tdutils tdnet tddb PRIVATE ${OPENSSL_CRYPTO_LIBRARY} ${CMAKE_DL_LIBS} ${ZLIB_LIBRARIES})
+target_link_libraries(tdcore PUBLIC mimalloc-static tdapi tdactor tdutils tdnet tddb PRIVATE ${OPENSSL_CRYPTO_LIBRARY} ${CMAKE_DL_LIBS} ${ZLIB_LIBRARIES})
 if (WIN32)
   if (MINGW)
     target_link_libraries(tdcore PRIVATE ws2_32 mswsock crypt32)
@@ -727,7 +727,7 @@ add_library(tdclient td/telegram/Client.cpp td/telegram/Client.h td/telegram/Log
 target_include_directories(tdclient PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
-target_link_libraries(tdclient PUBLIC tdapi mimalloc-static PRIVATE tdcore)
+target_link_libraries(tdclient PUBLIC tdapi PRIVATE tdcore)
 
 if (TD_ENABLE_DOTNET)
   add_library(tddotnet SHARED

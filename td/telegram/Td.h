@@ -6,6 +6,7 @@
 //
 #pragma once
 
+#include "mimalloc/include/mimalloc.h"
 #include "td/telegram/files/FileId.h"
 #include "td/telegram/net/MtprotoHeader.h"
 #include "td/telegram/net/NetQuery.h"
@@ -31,12 +32,6 @@
 #include "td/utils/Slice.h"
 #include "td/utils/Status.h"
 
-#ifdef __linux__
-  #include <malloc.h>
-#endif
-#ifdef _WIN32
-  #include <malloc.h>
-#endif
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>

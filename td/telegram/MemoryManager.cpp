@@ -216,12 +216,6 @@ void MemoryManager::clean_memory(bool full, Promise<Unit> promise) const {
   td_->inline_queries_manager_->memory_cleanup();
   td_->poll_manager_->memory_cleanup();
 
-  #ifdef __linux__
-    #if defined(__GLIBC__) && !defined(__UCLIBC__) && !defined(__MUSL__)
-      malloc_trim(0);
-    #endif
-  #endif
-
   promise.set_value(Unit());
 }
 

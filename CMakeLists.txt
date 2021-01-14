@@ -180,6 +180,8 @@ if (NOT TDUTILS_MIME_TYPE)
   return()
 endif()
 
+add_subdirectory(mimalloc)
+
 add_subdirectory(tdactor)
 
 add_subdirectory(tdnet)
@@ -702,7 +704,7 @@ endif()
 add_library(tdcore STATIC ${TDLIB_SOURCE})
 target_include_directories(tdcore PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${TL_TD_AUTO_INCLUDE_DIR}>)
 target_include_directories(tdcore SYSTEM PRIVATE ${OPENSSL_INCLUDE_DIR})
-target_link_libraries(tdcore PUBLIC tdapi tdactor tdutils tdnet tddb PRIVATE ${OPENSSL_CRYPTO_LIBRARY} ${CMAKE_DL_LIBS} ${ZLIB_LIBRARIES})
+target_link_libraries(tdcore PUBLIC tdapi tdactor tdutils tdnet tddb mimalloc PRIVATE ${OPENSSL_CRYPTO_LIBRARY} ${CMAKE_DL_LIBS} ${ZLIB_LIBRARIES})
 if (WIN32)
   if (MINGW)
     target_link_libraries(tdcore PRIVATE ws2_32 mswsock crypt32)

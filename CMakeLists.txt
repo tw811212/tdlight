@@ -727,7 +727,7 @@ add_library(tdclient td/telegram/Client.cpp td/telegram/Client.h td/telegram/Log
 target_include_directories(tdclient PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
-target_link_libraries(tdclient PUBLIC tdapi PRIVATE tdcore)
+target_link_libraries(tdclient PUBLIC tdapi mimalloc-static PRIVATE tdcore)
 
 if (TD_ENABLE_DOTNET)
   add_library(tddotnet SHARED
@@ -836,7 +836,7 @@ if (NOT CMAKE_CROSSCOMPILING AND NOT TD_SKIP_TG_CLI)
       target_compile_definitions(tg_cli PRIVATE -DUSE_READLINE=1)
     endif()
   endif()
-  target_link_libraries(tg_cli PRIVATE memprof tdclient tdcore)
+  target_link_libraries(tg_cli PUBLIC mimalloc-static PRIVATE memprof tdclient tdcore)
   add_dependencies(tg_cli tl_generate_json)
 endif()
 endif()
@@ -874,6 +874,7 @@ if (MEMPROF)
   # generate_pkgconfig(memprof "memprof - simple library for memory usage profiling")
 endif()
 generate_pkgconfig(tdcore "Telegram Library - Core")
+# generate_pkgconfig(mimalloc-static "Telegram Library - mimalloc")
 generate_pkgconfig(tdclient "Telegram Library - C++ Interface")
 if (TD_ENABLE_DOTNET)
   # generate_pkgconfig(tddotnet "Telegram Library - C# Interface")

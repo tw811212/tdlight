@@ -3916,7 +3916,9 @@ void Td::dec_actor_refcnt() {
       LOG(DEBUG) << "WebPagesManager was cleared" << timer;
 
       // Eagerly free memory
+      #if !defined(WIN32) && !defined(_WIN32)
       mi_collect(true);
+      #endif
 
       Promise<> promise = PromiseCreator::lambda([actor_id = create_reference()](Unit) mutable { actor_id.reset(); });
 
@@ -3935,7 +3937,9 @@ void Td::dec_actor_refcnt() {
     }
   } else {
     // Eagerly free memory
+    #if !defined(WIN32) && !defined(_WIN32)
     mi_collect(true);
+    #endif
   }
 }
 

@@ -142,7 +142,9 @@ if (CLANG OR GCC)
   endif()
 endif()
 
-add_subdirectory(mimalloc)
+if (NOT WIN32)
+  add_subdirectory(mimalloc)
+endif()
 
 add_subdirectory(tdtl)
 
@@ -704,7 +706,10 @@ endif()
 add_library(tdcore STATIC ${TDLIB_SOURCE})
 target_include_directories(tdcore PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${TL_TD_AUTO_INCLUDE_DIR}>)
 target_include_directories(tdcore SYSTEM PRIVATE ${OPENSSL_INCLUDE_DIR})
-target_link_libraries(tdcore PUBLIC tdapi tdactor tdutils tdnet tddb PRIVATE mimalloc-static ${OPENSSL_CRYPTO_LIBRARY} ${CMAKE_DL_LIBS} ${ZLIB_LIBRARIES})
+target_link_libraries(tdcore PUBLIC tdapi tdactor tdutils tdnet tddb PRIVATE ${OPENSSL_CRYPTO_LIBRARY} ${CMAKE_DL_LIBS} ${ZLIB_LIBRARIES})
+if (NOT WIN32)
+  target_link_libraries(tdcore PRIVATE mimalloc-static)
+endif()
 if (WIN32)
   if (MINGW)
     target_link_libraries(tdcore PRIVATE ws2_32 mswsock crypt32)
@@ -855,12 +860,21 @@ add_library(Td::TdStatic ALIAS TdStatic)
 add_library(Td::TdJson ALIAS TdJson)
 add_library(Td::TdJsonStatic ALIAS TdJsonStatic)
 
-install(TARGETS tdjson TdJson tdjson_static TdJsonStatic tdjson_private tdclient tdcore mimalloc-static tdapi TdStatic EXPORT TdTargets
-  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-  INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-)
+if (WIN32)
+  install(TARGETS tdjson TdJson tdjson_static TdJsonStatic tdjson_private tdclient tdcore tdapi TdStatic EXPORT TdTargets
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+  )
+else()
+  install(TARGETS tdjson TdJson tdjson_static TdJsonStatic tdjson_private tdclient tdcore mimalloc-static tdapi TdStatic EXPORT TdTargets
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+  )
+endif()
 
 # generate pkg-config files
 include(GeneratePkgConfig)
@@ -874,7 +888,9 @@ if (MEMPROF)
   # generate_pkgconfig(memprof "memprof - simple library for memory usage profiling")
 endif()
 generate_pkgconfig(tdcore "Telegram Library - Core")
+if (NOT WIN32)
 # generate_pkgconfig(mimalloc-static "Telegram Library - mimalloc")
+endif()
 generate_pkgconfig(tdclient "Telegram Library - C++ Interface")
 if (TD_ENABLE_DOTNET)
   # generate_pkgconfig(tddotnet "Telegram Library - C# Interface")

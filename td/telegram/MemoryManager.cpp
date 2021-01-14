@@ -217,7 +217,9 @@ void MemoryManager::clean_memory(bool full, Promise<Unit> promise) const {
   td_->poll_manager_->memory_cleanup();
 
   // Eagerly free memory
+  #if !defined(WIN32) && !defined(_WIN32)
   mi_collect(true);
+  #endif
 
   promise.set_value(Unit());
 }

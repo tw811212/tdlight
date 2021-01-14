@@ -6,7 +6,10 @@
 //
 #pragma once
 
+#if !defined(WIN32) && !defined(_WIN32)
 #include "mimalloc/include/mimalloc.h"
+#endif
+
 #include "td/telegram/files/FileId.h"
 #include "td/telegram/net/MtprotoHeader.h"
 #include "td/telegram/net/NetQuery.h"

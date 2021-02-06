@@ -57,7 +57,9 @@ MessageReplyInfo::MessageReplyInfo(tl_object_ptr<telegram_api::messageReplies> &
       ServerMessageId(reply_info->read_max_id_).is_valid()) {
     last_read_inbox_message_id = MessageId(ServerMessageId(reply_info->read_max_id_));
   }
-  if (last_read_inbox_message_id > max_message_id) {  // possible if last thread message was deleted after it was read
+  if (last_read_inbox_message_id > max_message_id) {
+    LOG(ERROR) << "Receive last_read_inbox_message_id = " << last_read_inbox_message_id
+               << ", but max_message_id = " << max_message_id;
     max_message_id = last_read_inbox_message_id;
   }
   LOG(DEBUG) << "Parsed " << oneline(to_string(reply_info)) << " to " << *this;

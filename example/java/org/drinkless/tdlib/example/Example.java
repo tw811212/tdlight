@@ -248,7 +248,7 @@ public final class Example {
     private static void getMainChatList(final int limit) {
         synchronized (mainChatList) {
             if (!haveFullMainChatList && limit > mainChatList.size()) {
-                // send GetChats request if there are some unknown chats and have not enough known chats
+                // have enough chats in the chat list or chat list is too small
                 long offsetOrder = Long.MAX_VALUE;
                 long offsetChatId = 0;
                 if (!mainChatList.isEmpty()) {
@@ -281,10 +281,11 @@ public final class Example {
                 return;
             }
 
+            // have enough chats in the chat list to answer request
             java.util.Iterator<OrderedChat> iter = mainChatList.iterator();
             System.out.println();
             System.out.println("First " + limit + " chat(s) out of " + mainChatList.size() + " known chat(s):");
-            for (int i = 0; i < limit && i < mainChatList.size(); i++) {
+            for (int i = 0; i < limit; i++) {
                 long chatId = iter.next().chatId;
                 TdApi.Chat chat = chats.get(chatId);
                 synchronized (chat) {
